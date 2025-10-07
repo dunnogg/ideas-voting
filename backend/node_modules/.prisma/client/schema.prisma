@@ -1,0 +1,26 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Idea {
+  id        Int      @id @default(autoincrement())
+  title     String
+  votes     Vote[]
+  createdAt DateTime @default(now())
+}
+
+model Vote {
+  id        Int      @id @default(autoincrement())
+  ideaId    Int
+  ip        String
+  createdAt DateTime @default(now())
+
+  idea Idea @relation(fields: [ideaId], references: [id])
+
+  @@unique([ideaId, ip])
+}
